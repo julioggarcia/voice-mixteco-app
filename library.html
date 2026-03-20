@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "error-dim": "#333333",
+              "secondary-dim": "#ffffff",
+              "on-background": "#ffffff",
+              "on-tertiary-fixed-variant": "#ffffff",
+              "secondary-fixed-dim": "#ffffff",
+              "surface-container": "#111111",
+              "tertiary": "#ffffff",
+              "surface-container-high": "#1a1a1a",
+              "outline": "#444444",
+              "on-tertiary-container": "#ffffff",
+              "on-secondary-fixed-variant": "#000000",
+              "inverse-on-surface": "#888888",
+              "on-error-container": "#ffffff",
+              "secondary-container": "#222222",
+              "primary-fixed": "#ffffff",
+              "on-primary-fixed-variant": "#000000",
+              "surface-container-lowest": "#000000",
+              "on-error": "#ffffff",
+              "primary-container": "#ffffff",
+              "on-secondary-container": "#ffffff",
+              "primary": "#ffffff",
+              "surface-bright": "#222222",
+              "background": "#000000",
+              "on-primary": "#000000",
+              "primary-dim": "#ffffff",
+              "on-secondary": "#000000",
+              "on-surface": "#ffffff",
+              "error-container": "#333333",
+              "on-surface-variant": "#888888",
+              "on-tertiary": "#000000",
+              "surface-container-highest": "#222222",
+              "surface-dim": "#000000",
+              "error": "#ffffff",
+              "tertiary-container": "#ffffff",
+              "outline-variant": "#333333",
+              "secondary": "#ffffff",
+              "surface-variant": "#111111",
+              "secondary-fixed": "#ffffff",
+              "surface": "#000000",
+              "inverse-surface": "#ffffff",
+              "primary-fixed-dim": "#eeeeee",
+              "inverse-primary": "#000000",
+              "tertiary-fixed": "#ffffff",
+              "surface-tint": "#ffffff",
+              "on-primary-fixed": "#000000",
+              "on-tertiary-fixed": "#000000",
+              "on-secondary-fixed": "#000000",
+              "tertiary-dim": "#ffffff",
+              "on-primary-container": "#000000",
+              "tertiary-fixed-dim": "#ffffff",
+              "surface-container-low": "#0a0a0a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Manrope"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .glass-panel {
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .primary-gradient {
+            background: #FFFFFF;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+            background-color: #000000;
+        }
+        img {
+            filter: grayscale(100%) contrast(110%);
+        }
+        .noir-card {
+            border: 1px solid #1a1a1a;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        .high-contrast-border {
+            border-left: 4px solid #FFFFFF;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col selection:bg-white selection:text-black">
+<header class="sticky top-0 z-30 flex items-center justify-between px-6 py-8 bg-black/90 backdrop-blur-md border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-white flex items-center justify-center text-black" data-icon="graphic_eq">
+<span class="material-symbols-outlined">graphic_eq</span>
+</div>
+<div>
+<h1 class="text-2xl font-extrabold font-headline tracking-tighter text-white uppercase">Sonic Dashboard</h1>
+<p class="text-[10px] font-label text-white/50 uppercase tracking-[0.2em] font-bold">32.4 GB Available</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all" data-icon="search">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all" data-icon="tune">
+<span class="material-symbols-outlined">tune</span>
+</button>
+<div class="size-10 rounded-full bg-white/10 overflow-hidden ml-2 border border-white/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="User profile avatar illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqrLUVoAUReButT3hkKE1WpWgtQUsHQ1uLxbLJ0d6qdU92WjKify-Hk_WfAEszTcldeYXUoZbbQx7OJtIwUS5NxkY779rvyMz-e5U5ZLqLjp4ppdyHZNR5NoR2etkz4kNqYknEVwvSXDBUBwoJtsY57eUzGq_Q5BNdD761g4khJrQ05CF2nFduUUjZlLJcidF99s0ktlkopuAnno1rxYiUgfbsU4PfqVgY7UiMm8GrwvN0Xgbqrfsp5m-hvEiE5J_WIcwe_UdmJgSZ"/>
+</div>
+</div>
+</header>
+<main class="flex-1 px-6 pb-32">
+<section class="grid grid-cols-2 gap-4 mb-10 mt-6">
+<div class="p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-1">
+<span class="text-white/40 text-[10px] font-label font-bold uppercase tracking-widest">Total Time</span>
+<span class="text-3xl font-headline font-extrabold text-white">12h 45m</span>
+</div>
+<div class="p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-1">
+<span class="text-white/40 text-[10px] font-label font-bold uppercase tracking-widest">Recordings</span>
+<span class="text-3xl font-headline font-extrabold text-white">48</span>
+</div>
+</section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-headline font-bold text-white uppercase tracking-tight">Recent Sessions</h2>
+<button class="text-white font-label text-xs font-bold flex items-center gap-1 uppercase tracking-widest hover:underline">
+            View Folders <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+<div class="flex flex-col gap-4">
+<div class="group relative p-5 rounded-lg bg-white/10 transition-all hover:bg-white/15 border border-white/20 high-contrast-border">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-white flex items-center justify-center text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">Product Brainstorming</h3>
+<div class="flex gap-3 mt-1">
+<span class="text-[10px] font-label text-white/50 uppercase font-bold tracking-tighter">Today, 2:45 PM</span>
+<span class="text-[10px] font-label text-white/20">•</span>
+<span class="text-[10px] font-label text-white/50 uppercase font-bold tracking-tighter">12.4 MB</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline font-extrabold text-white text-lg">42:15</p>
+<p class="text-[9px] font-label text-white uppercase tracking-[0.2em] font-black">WAV • 48kHz</p>
+</div>
+</div>
+</div>
+<div class="p-5 rounded-lg bg-white/5 border border-white/10 transition-all hover:bg-white/10">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-white/10 flex items-center justify-center text-white/70">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">Lecture: Quantum Physics</h3>
+<div class="flex gap-3 mt-1">
+<span class="text-[10px] font-label text-white/50 uppercase font-bold tracking-tighter">Oct 26, 2023</span>
+<span class="text-[10px] font-label text-white/20">•</span>
+<span class="text-[10px] font-label text-white/50 uppercase font-bold tracking-tighter">45.8 MB</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline font-bold text-white text-lg">1:15:30</p>
+<p class="text-[9px] font-label text-white/40 uppercase tracking-[0.2em] font-bold">MP3 • 320kbps</p>
+</div>
+</div>
+</div>
+<div class="p-5 rounded-lg bg-white/5 border border-white/10 transition-all hover:bg-white/10">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-white/10 flex items-center justify-center text-white/70">
+<span class="material-symbols-outlined">music_note</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">Acoustic Guitar Hook</h3>
+<div class="flex gap-3 mt-1">
+<span class="text-[10px] font-label text-white/50 uppercase font-bold tracking-tighter">Oct 25, 2023</span>
+<span class="text-[10px] font-label text-white/20">•</span>
+<span class="text-[10px] font-label text-white/50 uppercase font-bold tracking-tighter">5.2 MB</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline font-bold text-white text-lg">0:45</p>
+<p class="text-[9px] font-label text-white/40 uppercase tracking-[0.2em] font-bold">WAV • 96kHz</p>
+</div>
+</div>
+</div>
+<div class="p-5 rounded-lg bg-white/5 border border-white/10 transition-all hover:bg-white/10">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-white/10 flex items-center justify-center text-white/70">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">Voice Memo: Grocery List</h3>
+<div class="flex gap-3 mt-1">
+<span class="text-[10px] font-label text-white/50 uppercase font-bold tracking-tighter">Oct 24, 2023</span>
+<span class="text-[10px] font-label text-white/20">•</span>
+<span class="text-[10px] font-label text-white/50 uppercase font-bold tracking-tighter">1.1 MB</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline font-bold text-white text-lg">2:12</p>
+<p class="text-[9px] font-label text-white/40 uppercase tracking-[0.2em] font-bold">M4A • 128kbps</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-center gap-2 mt-10">
+<button class="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="size-10 rounded-full bg-white flex items-center justify-center text-black font-extrabold shadow-[0_0_15px_rgba(255,255,255,0.3)]">1</button>
+<button class="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:bg-white/10 transition-colors">2</button>
+<button class="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:bg-white/10 transition-colors">3</button>
+<button class="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+<div class="fixed bottom-0 left-0 right-0 p-8 flex justify-center pointer-events-none z-50">
+<div class="pointer-events-auto relative">
+<button class="bg-white size-20 rounded-full flex items-center justify-center shadow-[0_10px_40px_rgba(255,255,255,0.4)] hover:scale-105 active:scale-95 transition-transform" data-icon="add">
+<span class="material-symbols-outlined text-black text-4xl" style="font-variation-settings: 'wght' 700;">add</span>
+</button>
+<div class="absolute -inset-3 bg-white/10 rounded-full animate-pulse -z-10"></div>
+</div>
+</div>
+<nav class="fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-2xl border-t border-white/10">
+<div class="flex gap-2 px-4 pb-8 pt-3 max-w-md mx-auto">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-white" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="microphone" data-size="24px" data-weight="fill">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+</div>
+<p class="text-[10px] font-bold font-label leading-normal tracking-widest uppercase">Recordings</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-white/40 hover:text-white/80 transition-colors" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="star" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">star</span>
+</div>
+<p class="text-[10px] font-bold font-label leading-normal tracking-widest uppercase">Favorites</p>
+</a>
+<div class="flex-1 opacity-0"></div>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-white/40 hover:text-white/80 transition-colors" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="folder" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">folder</span>
+</div>
+<p class="text-[10px] font-bold font-label leading-normal tracking-widest uppercase">Library</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-white/40 hover:text-white/80 transition-colors" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="settings" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">settings</span>
+</div>
+<p class="text-[10px] font-bold font-label leading-normal tracking-widest uppercase">Settings</p>
+</a>
+</div>
+</nav>
+
+</body></html>
