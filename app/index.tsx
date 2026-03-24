@@ -1,6 +1,9 @@
-import { colors } from "@/theme";
-import { Text, View, StyleSheet } from "react-native";
-import { Header } from "../components/Header";
+import { colors, spacing, typography } from "@/theme";
+import { Text, View, StyleSheet, ScrollView, Pressable } from "react-native";
+import { Header } from "@/components/Header";
+import { MetricCard } from "@/components/MetricCard";
+import { MaterialIcons } from "@expo/vector-icons";
+
 
 const sessions: Session[] = [
   {
@@ -47,18 +50,56 @@ export default function Dashboard() {
     <View style={styles.safe}>
       <Header />
 
-      <View>
-        <View>
-          <Text>Total time</Text>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.metrics}>
+          <MetricCard label="Total Time" value="12h 45m"/>
+          <MetricCard label="Recordings" value="48"/>
         </View>
-        <View>
-          <Text>Second view</Text>
+
+        <View style={styles.sectionHeader}>
+          <Text style={typography.headline.section}>Recent Sessions</Text>
+          <Pressable style={styles.sectionAction} onPress={() => {}}>
+            <Text style={typography.label.action}>View Folders</Text>
+            <MaterialIcons name="chevron-right" size={18} color={colors.white} />
+          </Pressable>
         </View>
-      </View>
+
+        <View style={styles.list}>
+          { sessions.map((s) => (
+            <SessionRow key={s.id} session={s} onPress={() => {}} />
+          ))}
+        </View>
+          
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.bg }
+  safe: { flex: 1, backgroundColor: colors.bg },
+  content: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+    paddingBottom: 180, //room for bottom nav
+  },
+  metrics: {
+    flexDirection: "row",
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  sectionAction: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  list: {
+    gap: spacing.sm,
+  },
 });
