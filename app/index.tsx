@@ -3,49 +3,33 @@ import { Text, View, StyleSheet, ScrollView, Pressable } from "react-native";
 import { Header } from "@/components/Header";
 import { MetricCard } from "@/components/MetricCard";
 import { MaterialIcons } from "@expo/vector-icons";
+import { RecordRow } from "@/components/RecordRow";
+import { Pager } from "@/components/Pager";
+import type { Record } from "@/components/RecordRow";
+import { recordings } from "@/data/mockRecordings";
 
+import { useState, useEffect } from "react";
 
-const sessions: Session[] = [
-  {
-    id: "1",
-    title: "Product Brainstorming",
-    dateLabel: "Today, 2:45 PM",
-    sizeLabel: "12.4 MB",
-    durationLabel: "42:15",
-    formatLabel: "WAV • 48kHz",
-    iconName: "mic",
-    highlighted: true,
-  },
-  {
-    id: "2",
-    title: "Lecture: Quantum Physics",
-    dateLabel: "Oct 26, 2023",
-    sizeLabel: "45.8 MB",
-    durationLabel: "1:15:30",
-    formatLabel: "MP3 • 320kbps",
-    iconName: "description",
-  },
-  {
-    id: "3",
-    title: "Acoustic Guitar Hook",
-    dateLabel: "Oct 25, 2023",
-    sizeLabel: "5.2 MB",
-    durationLabel: "0:45",
-    formatLabel: "WAV • 96kHz",
-    iconName: "music-note",
-  },
-  {
-    id: "4",
-    title: "Voice Memo: Grocery List",
-    dateLabel: "Oct 24, 2023",
-    sizeLabel: "1.1 MB",
-    durationLabel: "2:12",
-    formatLabel: "M4A • 128kbps",
-    iconName: "history-edu",
-  },
-];
 
 export default function Dashboard() {
+  const [recordingList, setRecordingList] = useState<Record[]>(recordings);
+  const [paginatedList, setPaginatedList] = useState<Record[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  //these are the initial
+  useEffect(() => {
+    updatePage(1, 5);
+  }, [])
+
+  async function updatePage(page: number, pageSize: number) {
+    const start = (page-1) * pageSize;
+    const end = start + pageSize;
+
+    const paginated = recordingList.slice(start, end);
+
+    setPaginatedList(paginated);
+    setCurrentPage(page);
+  }
+
   return (
     <View style={styles.safe}>
       <Header />
@@ -65,10 +49,16 @@ export default function Dashboard() {
         </View>
 
         <View style={styles.list}>
-          { sessions.map((s) => (
-            <SessionRow key={s.id} session={s} onPress={() => {}} />
+          { paginatedList.map((r) => (
+            <RecordRow key={r.id} recording={r} onPress={() => {}} />
           ))}
         </View>
+
+        <Pager 
+          totalItems={ recordings.length } 
+          currentPage={ currentPage }
+          onChange={updatePage}
+        />
           
       </ScrollView>
     </View>

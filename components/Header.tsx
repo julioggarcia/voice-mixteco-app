@@ -26,6 +26,7 @@ export function Header() {
 
 const styles = StyleSheet.create({
   header: {
+    paddingTop: 50,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
     flexDirection: "row",
