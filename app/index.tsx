@@ -43,25 +43,8 @@ export default function Dashboard() {
     }, 500);
   };
 
-  const renderHeader = () => (
-    <View style={styles.listHeader}>
-      <View style={styles.metrics}>
-        <MetricCard label="Total Time" value="12h 45m"/>
-        <MetricCard label="Recordings" value={String(recordings.length)}/>
-      </View>
-
-      <View style={styles.sectionHeader}>
-        <Text style={typography.headline.section}>Recent Sessions</Text>
-        <Pressable style={styles.sectionAction} onPress={() => {}}>
-          <Text style={typography.label.action}>View Folders</Text>
-          <MaterialIcons name="chevron-right" size={18} color={colors.white} />
-        </Pressable>
-      </View>
-    </View>
-  );
-
   const renderFooter = () => {
-    if (!isLoading) return <View style={{height: 100}} />
+    if (!isLoading) return null;
     return (
       <View style={styles.loader}>
         <ActivityIndicator size="small" color={colors.white} />
@@ -73,32 +56,45 @@ export default function Dashboard() {
     <View style={styles.safe}>
       <Header />
 
-      <FlatList
-        data={paginatedList}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({item}) => (
-          <RecordRow recording={item} onPress={() => {}} />
-        )}
-        ListHeaderComponent={renderHeader}
-        ListFooterComponent={renderFooter}
-        contentContainerStyle={styles.content}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.3}
-        showsVerticalScrollIndicator={false}
-      />
+      <View style={styles.mainContainer}>
+        <View style={styles.metrics}>
+          <MetricCard label="Total Time" value="12h 45m"/>
+          <MetricCard label="Recordings" value={String(recordings.length)}/>
+        </View>
+
+        <View style={styles.sectionHeader}>
+          <Text style={typography.headline.section}>Recent Sessions</Text>
+          <Pressable style={styles.sectionAction} onPress={() => {}}>
+            <Text style={typography.label.action}>View Folders</Text>
+            <MaterialIcons name="chevron-right" size={18} color={colors.white} />
+          </Pressable>
+        </View>
+
+        <View style={styles.listContainer}>
+          <FlatList
+            data={paginatedList}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({item}) => (
+              <RecordRow recording={item} onPress={() => {}} />
+            )}
+            ListFooterComponent={renderFooter}
+            contentContainerStyle={styles.listContent}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.3}
+            showsVerticalScrollIndicator={true}
+          />
+        </View>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  content: {
+  mainContainer: {
+    flex: 1,
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
-    paddingBottom: 180, //room for bottom nav
-  },
-  listHeader: {
-    marginBottom: spacing.sm,
   },
   metrics: {
     flexDirection: "row",
@@ -115,11 +111,23 @@ const styles = StyleSheet.create({
   sectionAction: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 1,
+  },
+  listContainer: {
+    flex: 1,
+    backgroundColor: colors.bg,
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 120,
+    marginTop: spacing.md,
+    marginHorizontal: spacing.xl,
+  },
+  listContent: {
+    paddingHorizontal: spacing.sm,
+    paddingBottom: spacing.md,
   },
   loader: {
     paddingVertical: spacing.md,
     alignItems: "center",
-    marginBottom: 100,
   },
 });
