@@ -1,7 +1,7 @@
 import { colors, spacing, typography } from "@/theme";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Alert, Pressable, StyleSheet, View, Text, TextInput } from "react-native";
-import { useRouter } from "expo-router";
+import { Alert, Pressable, StyleSheet, View, Text, TextInput, Platform, BackHandler } from "react-native";
+import { useRouter} from "expo-router";
 import { useState, useEffect, useRef } from "react";
 
 type RecordingState = "idle" | "recording" | "paused" | "editing";
@@ -37,13 +37,39 @@ export default function RecordScreen() {
     return `${hrs.toString().padStart(2, '0')}:${min.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
   };
 
+  //android button back pressed
+  useEffect(() => {
+    const backAction = () => {
+      if (state !== "idle") {
+        handleBack();
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [state]);
 
   const handleBack = () => {
     if (state !== "idle") {
-      Alert.alert("Discard Recording","Are you sure? You will lose your current recording?", [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Discard', style: 'destructive', onPress: () => router.back() },
-      ]);
+      if (Platform.OS === 'web') {
+        const confirmed = window.confirm("Discard recording? You will your progress.");
+        if (confirmed) router.back();
+      } else {
+        Alert.alert(
+          "Discard Recording?",
+          "Are you sure? You will lose your current progress.",
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Discard', style: 'destructive', onPress: () => router.back() },
+          ]
+        );
+      }
     } else router.back();
   };
 
