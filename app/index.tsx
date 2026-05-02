@@ -1,17 +1,19 @@
 import { colors, spacing, typography } from "@/theme";
-import { Text, View, StyleSheet, ScrollView, Pressable, FlatList, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, Pressable, FlatList, ActivityIndicator } from "react-native";
 import { Header } from "@/components/Header";
 import { MetricCard } from "@/components/MetricCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RecordRow } from "@/components/RecordRow";
 import type { Record } from "@/components/RecordRow";
 import { recordings } from "@/data/mockRecordings";
+import { useRouter } from "expo-router";
 
 import { useState, useEffect } from "react";
 
 const PAGE_SIZE = 10;
 
 export default function Dashboard() {
+  const router = useRouter();
   const [paginatedList, setPaginatedList] = useState<Record[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading ] = useState(false);
@@ -85,6 +87,17 @@ export default function Dashboard() {
           />
         </View>
       </View>
+
+      {/* center Mic button */}
+      <View style={styles.fabContainer}>
+        <Pressable 
+          style={styles.micButton}
+          onPress={() => router.push('/record')}
+        >
+          <MaterialIcons name="mic" size={32} color={colors.white} />
+        </Pressable>
+      </View>
+
     </View>
   );
 }
@@ -130,4 +143,24 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     alignItems: "center",
   },
+  fabContainer: {
+    position: 'absolute',
+    bottom: 40,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  micButton: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#FF3830',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 4.56,
+    elevation: 8,
+  },  
 });
