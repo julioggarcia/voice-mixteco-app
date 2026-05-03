@@ -3,6 +3,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Alert, Pressable, StyleSheet, View, Text, TextInput, Platform, BackHandler } from "react-native";
 import { useRouter} from "expo-router";
 import { useState, useEffect, useRef } from "react";
+import { useSafeNavigation } from "@/hooks/useSafeNavigation";
 
 type RecordingState = "idle" | "recording" | "paused" | "editing";
 
@@ -37,41 +38,11 @@ export default function RecordScreen() {
     return `${hrs.toString().padStart(2, '0')}:${min.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
   };
 
-  //android button back pressed
-  useEffect(() => {
-    const backAction = () => {
-      if (state !== "idle") {
-        handleBack();
-        return true;
-      }
-      return false;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, [state]);
-
-  const handleBack = () => {
-    if (state !== "idle") {
-      if (Platform.OS === 'web') {
-        const confirmed = window.confirm("Discard recording? You will your progress.");
-        if (confirmed) router.back();
-      } else {
-        Alert.alert(
-          "Discard Recording?",
-          "Are you sure? You will lose your current progress.",
-          [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Discard', style: 'destructive', onPress: () => router.back() },
-          ]
-        );
-      }
-    } else router.back();
-  };
+  const { onConfirmBack } = useSafeNavigation(
+    state !== "idle",
+    "Discard Recording",
+    "Are you sure you want to discard this recording?"
+  );
 
   const handleMainButton = () => {
     if (state == "idle" || state === "paused") setState("recording");
@@ -81,7 +52,7 @@ export default function RecordScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Pressable onPress={handleBack}>
+        <Pressable onPress={onConfirmBack}>
           <MaterialIcons name="arrow-back" size={28} color={colors.white}/>
         </Pressable>
 
