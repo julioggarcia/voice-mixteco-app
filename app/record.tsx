@@ -1,9 +1,12 @@
 import { colors, spacing, typography } from "@/theme";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Alert, Pressable, StyleSheet, View, Text, TextInput, Platform, BackHandler } from "react-native";
+import { Alert, Pressable, StyleSheet, View, Text, TextInput } from "react-native";
 import { useRouter} from "expo-router";
 import { useState, useEffect, useRef } from "react";
 import { useSafeNavigation } from "@/hooks/useSafeNavigation";
+import { useAudioRecorder, RecordingPresets, AudioModule, setAudioModeAsync, useAudioRecorderState } from "expo-audio";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
+import { Pager } from "@/components/Pager";
 
 type RecordingState = "idle" | "recording" | "paused" | "editing";
 
@@ -12,24 +15,79 @@ export default function RecordScreen() {
   const [state, setState] = useState<RecordingState>("idle");
   const [seconds, setSeconds] = useState(0);
   const [recordingName, setRecordingName] = useState("New Recording");
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  const recorderState = useAudioRecorderState(recorder);
+
+  //animated value for waveform
+  const meterValue = useSharedValue(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const meterPollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  //initialize audio
   useEffect(() => {
-    if (state == "recording") {
-      timerRef.current = setInterval(() => {
-        setSeconds((prev) => prev+1);
-      }, 1000); //every 1 sec
-    } else {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
+    const initAudio = async () => {
+      try {
+        const { granted } = await AudioModule.requestRecordingPermissionsAsync();
+        if (!granted) {
+          Alert.alert('Permission denied', 'Microphone access is required.');
+          return;
+        }
+
+        await AudioModule.setAudioModeAsync({
+          allowsRecording: true,
+          playsInSilentMode: true,
+        });
+      } catch (e) {
+        console.error("Audio init error:", e);
       }
-    }
-    return () => { 
-      if (timerRef.current) 
-        clearInterval(timerRef.current); 
     };
-  }, [state]);
+
+    initAudio();
+  }, []);
+
+  const record = async () => {
+    await recorder.prepareToRecordAsync();
+    recorder.record();
+  }
+
+  const stopRecording = async () => {
+    await recorder.stop();
+  };
+
+  //sync state and metering
+  useEffect(() => {
+    if (recorderState.isRecording) {
+      setState("recording");
+
+      timerRef.current = setInterval(() => setSeconds(s => s+1), 1000);
+      
+      //polling for waveform
+      meterPollingRef.current = setInterval(async () => {
+        const status = recorder.getStatus();
+        if (status.metering !== undefined && status.metering !== null) {
+          //normalize db (-160, 0) to 0-1 scale
+          const normalized = Math.max(0, (status.metering + 160) / 160);
+          meterValue.value = withSpring(normalized, { damping: 15 });
+        }
+      }, 100); //10 fps
+    } else {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (meterPollingRef.current) clearInterval(meterPollingRef.current);
+      meterValue.value = withSpring(0);
+    }
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (meterPollingRef.current) clearInterval(meterPollingRef.current);
+    };
+
+  }, [recorder.isRecording]);
+
+  const handleStart = async () => {
+    //permissions handled in startRecording 
+
+  }
 
   const formatTime = (s: number) => {
     const hrs = Math.floor(s / 3600);
@@ -102,7 +160,7 @@ export default function RecordScreen() {
 
           {/* Main Record/Stop button */}
           {state !== "editing" && (
-            <Pressable style={styles.mainButton} onPress={handleMainButton}>
+            <Pressable style={styles.mainButton} onPress={record}>
               <View style={state === "recording" ? styles.stopSquare : null}>
                 {state !== "recording" && (
                   <MaterialIcons name="mic" size={48} color={colors.white} />
