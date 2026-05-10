@@ -17,7 +17,7 @@ export default function RecordScreen() {
   const [recordingName, setRecordingName] = useState("New Recording");
 
   const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
-  const recorderState = useAudioRecorderState(recorder);
+  const recorderState = useAudioRecorderState(recorder);//default 500ms
 
   //animated value for waveform
   const meterValue = useSharedValue(0);
@@ -26,6 +26,7 @@ export default function RecordScreen() {
 
   //initialize audio
   useEffect(() => {
+    console.log('Recording page just loaded');
     const initAudio = async () => {
       try {
         const { granted } = await AudioModule.requestRecordingPermissionsAsync();
@@ -47,18 +48,23 @@ export default function RecordScreen() {
   }, []);
 
   const record = async () => {
-    await recorder.prepareToRecordAsync();
     recorder.record();
+    console.log(`in record(): - recordingState: ${JSON.stringify(recorderState)}`);
+
   }
 
   const stopRecording = async () => {
-    await recorder.stop();
+    if (recorderState.isRecording) {
+      await recorder.stop();
+      setState("editing");
+    } else {
+      console.log("can't stop");
+    }
   };
 
   //sync state and metering
   useEffect(() => {
     if (recorderState.isRecording) {
-      setState("recording");
 
       timerRef.current = setInterval(() => setSeconds(s => s+1), 1000);
       
@@ -82,7 +88,7 @@ export default function RecordScreen() {
       if (meterPollingRef.current) clearInterval(meterPollingRef.current);
     };
 
-  }, [recorder.isRecording]);
+  }, [recorderState.isRecording]);
 
   const handleStart = async () => {
     //permissions handled in startRecording 
@@ -102,11 +108,22 @@ export default function RecordScreen() {
     "Are you sure you want to discard this recording?"
   );
 
-  const handleMainButton = () => {
-    if (state == "idle" || state === "paused") setState("recording");
-    else if (state === "recording") setState("editing");
+  const handleMainButton = async () => {
+    console.log(JSON.stringify(recorderState));
+    if (recorderState.isRecording)
+      await stopRecording();
+    else {
+      if (!recorderState.canRecord) {
+        await recorder.prepareToRecordAsync();
+        await record();
+      }
+      else if (recorderState.canRecord)
+        await record();
+      else
+        console.log('yea nothing to do');
+    }
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -145,13 +162,13 @@ export default function RecordScreen() {
         {/* controls */}
         <View style={styles.controlsRow}>
           {/* Pause button - only visible when recording/paused */}
-          {(state === "recording" || state === "paused") && (
+          {(recorderState.isRecording || recorderState.canRecord) && (
             <Pressable 
               style={styles.secondaryButton}
-              onPress={() => setState(state === "recording" ? "paused" : "recording")}
+              onPress={() => recorder.pause() }
             >
               <MaterialIcons 
-                name={state === "recording" ? "pause" : "play-arrow"}
+                name={ recorderState.isRecording ? "pause" : "play-arrow"}
                 size={32} 
                 color={colors.white} 
               />
@@ -160,9 +177,9 @@ export default function RecordScreen() {
 
           {/* Main Record/Stop button */}
           {state !== "editing" && (
-            <Pressable style={styles.mainButton} onPress={record}>
-              <View style={state === "recording" ? styles.stopSquare : null}>
-                {state !== "recording" && (
+            <Pressable style={styles.mainButton} onPress={handleMainButton}>
+              <View style={recorderState.isRecording ? styles.stopSquare : null}>
+                {recorderState.canRecord && (
                   <MaterialIcons name="mic" size={48} color={colors.white} />
                 )}
               </View>
