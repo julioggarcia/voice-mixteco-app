@@ -6,7 +6,6 @@ import { useState, useEffect, useRef } from "react";
 import { useSafeNavigation } from "@/hooks/useSafeNavigation";
 import { useAudioRecorder, RecordingPresets, AudioModule, setAudioModeAsync, useAudioRecorderState } from "expo-audio";
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
-import { Pager } from "@/components/Pager";
 
 type RecordingState = "idle" | "recording" | "paused" | "editing";
 
@@ -49,6 +48,7 @@ export default function RecordScreen() {
 
   const record = async () => {
     recorder.record();
+    setState('recording');
     console.log(`in record(): - recordingState: ${JSON.stringify(recorderState)}`);
 
   }
@@ -61,6 +61,11 @@ export default function RecordScreen() {
       console.log("can't stop");
     }
   };
+
+  const pause = async () => {
+    recorder.pause();
+    setState('paused');
+  }
 
   //sync state and metering
   useEffect(() => {
@@ -162,10 +167,16 @@ export default function RecordScreen() {
         {/* controls */}
         <View style={styles.controlsRow}>
           {/* Pause button - only visible when recording/paused */}
-          {(recorderState.isRecording || recorderState.canRecord) && (
-            <Pressable 
+          {(recorderState.isRecording || state === "paused") &&
+            (<Pressable 
               style={styles.secondaryButton}
-              onPress={() => recorder.pause() }
+              onPress={() => {
+                if (recorderState.isRecording) {
+                  pause();
+                } else {
+                  record();
+                }
+              }}
             >
               <MaterialIcons 
                 name={ recorderState.isRecording ? "pause" : "play-arrow"}
@@ -178,11 +189,11 @@ export default function RecordScreen() {
           {/* Main Record/Stop button */}
           {state !== "editing" && (
             <Pressable style={styles.mainButton} onPress={handleMainButton}>
-              <View style={recorderState.isRecording ? styles.stopSquare : null}>
-                {recorderState.canRecord && (
-                  <MaterialIcons name="mic" size={48} color={colors.white} />
-                )}
-              </View>
+              {recorderState.isRecording || state === "paused" ? (
+                <View style={styles.stopSquare} />
+              ) : (
+                <MaterialIcons name="mic" size={48} color={colors.white} />
+              )}
             </Pressable>
           )}
 
